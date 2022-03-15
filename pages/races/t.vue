@@ -224,7 +224,7 @@ export default {
   },
 
   async fetch () {
-    this.lanes = await this.$axios.$get('http://127.0.0.1:5000/lanes')
+    this.lanes = await this.$axios.$get('/lanes')
   },
 
   methods: {

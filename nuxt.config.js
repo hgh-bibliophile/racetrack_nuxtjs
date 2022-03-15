@@ -44,7 +44,7 @@ export default {
   ],
 
   axios: {
-    baseURL: 'http://localhost:5000', // Used as fallback if no runtime config is provided
+    baseURL: 'http://api.racetrack.gratiafides.com', // Used as fallback if no runtime config is provided
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
