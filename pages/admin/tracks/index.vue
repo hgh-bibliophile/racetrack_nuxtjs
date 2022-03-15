@@ -1,20 +1,22 @@
 <template>
-  <v-card>
-    <v-card-title>
-      <v-text-field
-      v-model="search"
-      append-icon="mdi-magnify"
-      label="Search"
-      single-line
-      hide-details
-      ></v-text-field>
-    </v-card-title>
-    <v-data-table
-      :headers="headers"
-      :items="lanes"
-      :search="search"
-    ></v-data-table>
-  </v-card>
+  <v-app>
+    <v-card>
+      <v-card-title>
+        <v-text-field
+        v-model="search"
+        append-icon="mdi-magnify"
+        label="Search"
+        single-line
+        hide-details
+        ></v-text-field>
+      </v-card-title>
+      <v-data-table
+        :headers="headers"
+        :items="tracks"
+        :search="search"
+      ></v-data-table>
+    </v-card>
+  </v-app>
 </template>
 
 <script>
@@ -23,14 +25,14 @@ export default {
   data: () => ({
     search: '',
     headers: [
-      { text: '#', align: 'start', value: 'lane_number' },
-      { text: 'Color', value: 'color' },
-      { text: 'Dist', value: 'distance' }
+      { text: 'ID', value: 'id' },
+      { text: 'Name', value: 'name' },
+      { text: '# Lanes', value: 'lanes_ct' }
     ],
-    lanes: []
+    tracks: []
   }),
   async fetch () {
-    this.lanes = await this.$axios.$get('/lanes')
+    this.tracks = await this.$axios.$get('/tracks')
   }
 }
 </script>
