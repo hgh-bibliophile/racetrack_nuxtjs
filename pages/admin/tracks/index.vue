@@ -1,15 +1,7 @@
 <template>
   <v-app>
     <v-card>
-      <v-card-title>
-        <v-text-field
-        v-model="search"
-        append-icon="mdi-magnify"
-        label="Search"
-        single-line
-        hide-details
-        ></v-text-field>
-      </v-card-title>
+      <FieldSearch v-model="search"/>
       <v-data-table
         :headers="headers"
         :items="tracks"

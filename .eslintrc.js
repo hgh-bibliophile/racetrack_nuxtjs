@@ -17,6 +17,7 @@ module.exports = {
   // add your custom rules here
   rules: {
     "vue/html-self-closing": "off", // Fix v-for/template/key bug,
-    "vue/valid-v-slot": "off"
+    "vue/valid-v-slot": "off",
+    "vue/singleline-html-element-content-newline": "off"
   }
 }

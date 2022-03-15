@@ -7,13 +7,7 @@
         </h1>
           <v-card>
             <v-card-title>
-              <v-text-field
-                v-model="search"
-                append-icon="mdi-magnify"
-                label="Search"
-                single-line
-                hide-details
-              ></v-text-field>
+              <FieldSearch v-model="search"/>
             </v-card-title>
             <v-data-table
               :headers="headers"
