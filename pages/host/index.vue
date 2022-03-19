@@ -1,7 +1,7 @@
 <template>
   <div class="relative flex flex-col items-top justify-center min-h-screen sm:items-center sm:pt-0">
 
-    <div id="alert" :class="{ hidden: hideAlert }" class="flex p-4 mb-4 bg-blue-100 rounded-lg dark:bg-blue-200" role="alert">
+    <div id="alert" :class="{ hidden: hideAlert }" class="flex h-fit p-4 mb-4 bg-blue-100 rounded-lg dark:bg-blue-200" role="alert">
       <svg class="flex-shrink-0 w-5 h-5 text-blue-700 dark:text-blue-800" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
       <div class="ml-3 text-sm font-medium text-blue-700 dark:text-blue-800">
         {{ alert }}
@@ -49,7 +49,7 @@
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
             required>
         </div>
-        <div>
+        <div class="hidden">
           <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300" for="user_avatar">Upload file</label>
           <input class="block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer dark:text-gray-400 focus:outline-none focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" type="file">
         </div>
@@ -57,6 +57,9 @@
         <button @click="startHeat" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
           Start Heat
         </button>
+        <h5 class="text-xl font-medium text-gray-900 dark:text-white">
+          Heat #{{ heat_num }}
+        </h5>
         <tailwind-table :headers="t_headers" :data="t_data" />
       </div>
     </div>

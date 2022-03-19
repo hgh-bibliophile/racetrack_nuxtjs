@@ -17,10 +17,10 @@ export default {
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
     ],
     script: [
-      {
-        src: "js/main.js",
-        type: "module"
-      }
+      // {
+      //   src: "js/main.js",
+      //   type: "module"
+      // }
     ],
   },
 

@@ -8,10 +8,10 @@ module.exports = {
     "./node_modules/flowbite/**/*.js"
   ],
   safelist: [
-    'text-2xl',
-    'text-3xl',
+    // 'text-2xl',
+    // 'text-3xl',
     {
-      pattern: /(border|text)-(red|green|blue|gray)-(400|500|600|700|800)/,
+      pattern: /(bg|border|text)-(red|orange|yellow|green|blue|purple|gray)-(400|500|600|700|800)/,
     },
   ],
   theme: {
