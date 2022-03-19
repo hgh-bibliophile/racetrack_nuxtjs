@@ -110,8 +110,11 @@ export default {
     t_data: []
   }),
   watch: {
-    race_link(new_link, old_link) {
-      this.race = await this.$axios.$get('/races/l/' + new_link)
+    race_link (newLink, oldLink) {
+      this.$axios.$get('/races/l/' + newLink)
+        .then((resp) => {
+          this.race = resp
+        })
     }
   },
   methods: {
@@ -130,7 +133,7 @@ export default {
         .catch(err => console.log(err))
     },
     loadHeat () {
-      this.$axios.$get('/races/12/heats/' + this.heat_num)
+      this.$axios.$get('/races/' + this.race.id + '/heats/' + this.heat_num)
         .then((resp) => {
           console.log(resp)
           this.t_data = resp.runs

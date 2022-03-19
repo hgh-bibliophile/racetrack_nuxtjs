@@ -75,6 +75,9 @@ export default {
     })
     this.cars = await this.$axios.$get('/races/' + this.race.id + '/speeds')
     this.sortSpeeds()
+    console.log(this.race)
+    console.log(this.track)
+    console.log(this.cars)
   },
   mounted () {
     this.connect()
