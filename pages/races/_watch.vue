@@ -5,12 +5,12 @@
         <h1 class="text-2xl leading-7 font-semibold">
           Hello {{ $route.params.watch }}!
         </h1>
-        <div v-for="i in 4" :key="i" class="p-6 max-w-2xl bg-white text-center rounded-lg border-8 border-green-500 shadow-md dark:bg-gray-800 dark:border-gray-700">
-          <h1 class="mb-2 text-5xl font-bold tracking-tight text-gray-900 dark:text-white">
+        <div v-for="i in ['blue', 'green', 'red', 'gray']" :key="i" :class="'border-' + i + '-500'" class="p-6 max-w-2xl bg-white text-center rounded-lg border-8 shadow-md dark:bg-gray-800 dark:border-gray-700">
+          <h1 :class="'text-' + i + '-800'" class="mb-2 text-5xl font-bold tracking-tight dark:text-white">
             2 - Abby Hartfelder
           </h1>
           <h2 class="mb-3 text-5xl font-normal text-gray-700 dark:text-gray-400">
-            235.1 mph * 26413.23 fps
+            235.1 mph ~ 26413.23 fps
           </h2>
         </div>
 
