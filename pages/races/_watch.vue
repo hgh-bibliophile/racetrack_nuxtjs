@@ -107,7 +107,7 @@ export default {
       return path.split('.').reduce((o, p) => o ? o[p] : '', obj)
     },
     connect () {
-      this.ws = new WebSocket('ws://api.http://racetrack.gratiafides.com/watch/' + this.$route.params.watch)
+      this.ws = new WebSocket('ws://api.racetrack.gratiafides.com/watch/' + this.$route.params.watch)
       console.log(this.ws)
       this.ws.onmessage = (e) => {
         const event = JSON.parse(e.data)
