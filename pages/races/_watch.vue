@@ -1,5 +1,5 @@
 <template>
-  <div class="relative flex flex-wrap xl:flex-nowrap flex-col sm:flex-row items-top sm:items-center min-h-screen bg-gray-100  sm:pt-0">
+  <div class="relative flex flex-wrap xl:flex-nowrap flex-col sm:flex-row items-top min-h-screen bg-gray-100 sm:mt-6">
     <div class="flex-auto mx-auto w-full sm:max-w-3xl sm:px-6 lg:px-8 xl:flex-none xl:mx-0">
       <div v-for="(t_data, lane_number) in race_data" :key="lane_number" class="flex items-center">
         <div :class="color('text', t_data.lane.color, '800')" class="mr-8 hidden sm:block text-5xl">{{ lane_number }}</div>
