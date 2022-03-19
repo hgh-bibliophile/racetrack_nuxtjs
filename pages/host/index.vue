@@ -85,6 +85,7 @@ export default {
     },
     ws_data: '',
     race_link: 'test_wd22',
+    race: null,
     heat_num: null,
     alert: '',
     hideAlert: true,
@@ -108,6 +109,11 @@ export default {
     ],
     t_data: []
   }),
+  watch: {
+    race_link(new_link, old_link) {
+      this.race = await this.$axios.$get('/races/l/' + new_link)
+    }
+  },
   methods: {
     startHeat () {
       if (!this.race_link || !this.heat_num) {
