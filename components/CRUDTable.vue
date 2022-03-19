@@ -1,16 +1,16 @@
 <template>
-  <div >
-    <v-app >
+  <div>
+    <v-app>
       <v-data-table
         :headers="headers"
-        :items="lanes"
+        :items="tbl_data"
         :search="search"
-        sort-by="lane_number"
+        :sort-by="tbl.sort_by"
         class="elevation-1"
       >
         <template #top>
           <v-toolbar flat>
-            <v-toolbar-title>CRUD Lanes</v-toolbar-title>
+            <v-toolbar-title>{{ title }}</v-toolbar-title>
             <v-divider
               class="mx-4"
               inset
@@ -18,7 +18,7 @@
             ></v-divider>
             <v-spacer></v-spacer>
 
-            <FieldSearch v-model="search"/>
+            <FieldSearch v-model="search" />
 
             <v-spacer></v-spacer>
 
@@ -34,7 +34,7 @@
                   v-bind="attrs"
                   v-on="on"
                 >
-                  New Lane
+                  New {{ model.singular }}
                 </v-btn>
               </template>
 
@@ -46,9 +46,10 @@
                 <v-card-text>
                   <v-container>
                     <v-row>
-                      <FieldText v-model="editedItem.lane_number" label="Lane #"/>
-                      <FieldText v-model="editedItem.color" label="Color"/>
-                      <FieldText v-model="editedItem.distance" label="Distance"/>
+                      <FieldText v-for="field in edit.fields"
+                        :key="field.label"
+                        :label="field.label"
+                        v-model="edit.item[field.val]" />
                     </v-row>
                   </v-container>
                 </v-card-text>
@@ -93,32 +94,48 @@
 <script>
 export default {
   name: 'CRUDTable',
-  data: () => ({
-    dialog: false,
-    dialogDelete: false,
-    search: '',
-    headers: [
-      { text: '#', align: 'start', value: 'lane_number' },
-      { text: 'Color', value: 'color' },
-      { text: 'Dist', value: 'distance' },
-      { text: 'Actions', value: 'actions', sortable: false }
-    ],
-    lanes: [],
-    editedIndex: -1,
-    editedItem: {
-      lane_number: null,
-      color: '',
-      distance: 24
+  props: {
+    title: String,
+    url: String,
+    postArray: Boolean,
+    model: {
+      singular: String,
+      plural: String
     },
-    defaultItem: {
-      lane_number: null,
-      color: '',
-      distance: 24
+    tbl: {
+      sort_by: String,
+      headers: Array,
+      editFields: Array,
+      exclude: {
+        onUpdate: Array
+      },
+      default: Object
     }
-  }),
+
+  },
+  emits: ['onUpdate', 'onInsert'],
+  data () {
+    return {
+      dialog: false,
+      dialogDelete: false,
+      search: '',
+      tbl_data: [],
+      actions_header: [{ text: 'Actions', value: 'actions', sortable: false }],
+      edit: {
+        index: -1,
+        item: Object.assign({}, this.tbl.default),
+        fields: Object.assign({}, this.tbl.editFields)
+      },
+      defaultItem: Object.assign({}, this.tbl.default)
+    }
+  },
+
   computed: {
     formTitle () {
-      return this.editedIndex === -1 ? 'New Lane' : 'Edit Lane'
+      return (this.edit.index === -1 ? 'New' : 'Edit') + ' ' + this.model.singular
+    },
+    headers () {
+      return [].concat(this.tbl.headers, this.actions_header)
     }
   },
 
@@ -132,58 +149,67 @@ export default {
   },
 
   async fetch () {
-    this.lanes = await this.$axios.$get('/lanes')
+    this.tbl_data = await this.$axios.$get(this.url)
   },
 
   methods: {
+    // Axios API Methods
+    $updateItem (item, index) {
+      const itemCP = Object.assign({}, item)
+      this.tbl.exclude?.onUpdate?.forEach(el => delete itemCP[el])
+      this.$axios.$put(this.url + '/' + item.id, itemCP)
+        .then(resp => Object.assign(this.tbl_data[index], resp))
+        .catch(err => console.log(err))
+    },
+    $createItem (item) {
+      const post = !this.postArray ? item : [item]
+      this.$axios.$post(this.url, post)
+        .then(resp => this.tbl_data.push(!this.postArray ? resp : resp[0]))
+        .catch(err => console.log(err))
+    },
+    $deleteItem (item) {
+      this.$axios.$delete(this.url + '/' + item.id)
+        .then(this.tbl_data.splice(this.edit.index, 1))
+        .catch(err => console.log(err))
+    },
+    // Open dialogs
     editItem (item) {
-      this.editedIndex = this.lanes.indexOf(item)
-      this.editedItem = Object.assign({}, item)
+      this.edit.index = this.tbl_data.indexOf(item)
+      this.edit.item = Object.assign({}, item)
       this.dialog = true
     },
     deleteItem (item) {
-      this.editedIndex = this.lanes.indexOf(item)
-      this.editedItem = Object.assign({}, item)
+      this.edit.index = this.tbl_data.indexOf(item)
+      this.edit.item = Object.assign({}, item)
       this.dialogDelete = true
     },
+    // Handle CRUD actions
     deleteItemConfirm () {
-      this.lanes.splice(this.editedIndex, 1)
-      this.$axios.$delete('/lanes/' + this.editedItem.id)
+      this.$deleteItem(this.edit.item)
       this.closeDelete()
     },
+    save () {
+      if (this.edit.index > -1) {
+        this.$updateItem(this.edit.item, this.edit.index)
+      } else {
+        this.$createItem(this.edit.item)
+      }
+      this.close()
+    },
+    // Close dialogs
     close () {
       this.dialog = false
       this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
+        this.edit.item = Object.assign({}, this.defaultItem)
+        this.edit.index = -1
       })
     },
     closeDelete () {
       this.dialogDelete = false
       this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
+        this.edit.item = Object.assign({}, this.defaultItem)
+        this.edit.index = -1
       })
-    },
-    updateItem (url, item) {
-      this.$axios.$put(url + '/' + item.id, item)
-        .then(function (response) {
-          console.log(response)
-        })
-        .catch(function (error) {
-          console.log(error)
-        })
-    },
-    save () {
-      const lane = Object.assign({}, this.editedItem)
-      delete lane.track
-      if (this.editedIndex > -1) {
-        Object.assign(this.lanes[this.editedIndex], this.editedItem)
-        this.updateItem('/lanes', lane)
-      } else {
-        this.lanes.push(this.editedItem)
-      }
-      this.close()
     }
   }
 }

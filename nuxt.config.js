@@ -1,3 +1,5 @@
+import webpack from 'webpack'
+
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -13,7 +15,13 @@ export default {
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
-    ]
+    ],
+    script: [
+      {
+        src: "js/main.js",
+        type: "module"
+      }
+    ],
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -22,7 +30,9 @@ export default {
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
+  plugins: [
+    { src: '~/plugins/vue-flowbite.js', ssr: false }
+  ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -45,12 +55,20 @@ export default {
 
   publicRuntimeConfig: {
     axios: {
-      baseURL: process.env.API_URL || 'http://api.racetrack.gratiafides.com'//'http://127.0.0.1:8000'
+      baseURL: process.env.API_URL || 'http://api.racetrack.gratiafides.com'  //'http://127.0.0.1:8000'
     }
   },
 
+
+
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+    plugins: [
+      new webpack.ProvidePlugin({
+        // global modules
+        flowbite: 'flowbite'
+      }),
+    ],
     postcss: {
       plugins: {
         tailwindcss: {},
