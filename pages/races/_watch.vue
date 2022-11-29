@@ -13,7 +13,7 @@
               <div v-else># - Name</div>
             </h1>
             <h2 class="mb-3 text-2xl sm:text-5xl font-normal text-gray-700 dark:text-gray-400">
-              <div v-if="t_data.run && !active_heat">{{ t_data.run.mph ? t_data.run.mph.toFixed(1) : 0 }} mph ~ {{ t_data.run.fps ? t_data.run.mph.toFixed(1) : 0 }} fps</div>
+              <div v-if="t_data.run && !active_heat">{{ t_data.run.mph ? t_data.run.mph.toFixed(1) : 0 }} mph ~ {{ t_data.run.fps ? t_data.run.fps.toFixed(1) : 0 }} fps</div>
               <div v-else>mph ~ fps</div>
             </h2>
           </div>
