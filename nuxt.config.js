@@ -21,12 +21,12 @@ export default {
       //   src: "js/main.js",
       //   type: "module"
       // }
-    ],
+    ]
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
-    '@/assets/css/main.css',
+    '@/assets/css/main.css'
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
@@ -41,25 +41,32 @@ export default {
   buildModules: [
     // https://go.nuxtjs.dev/eslint
     '@nuxtjs/eslint-module',
-    // https://go.nuxtjs.dev/tailwindcss
-    //'@nuxtjs/tailwindcss',
+    // https://go.nuxtjs.dev/tailwindcss,
+    // '@nuxtjs/tailwindcss',
     '@nuxt/postcss8',
-    '@nuxtjs/vuetify',
+    '@nuxtjs/vuetify'
   ],
-
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
-    '@nuxtjs/axios'
+    '@nuxtjs/axios',
+    'nuxt-socket-io'
   ],
+
+  io: {
+    // module options
+    sockets: [{
+      default: true,
+      name: 'main',
+      url: process.env.API_URL || 'http://127.0.0.1:5000/'
+    }]
+  },
 
   publicRuntimeConfig: {
     axios: {
-      baseURL: process.env.API_URL || 'http://api.racetrack.gratiafides.com'  //'http://127.0.0.1:8000'
+      baseURL: process.env.API_URL || 'http://127.0.0.1:5000/'
     }
   },
-
-
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
@@ -67,13 +74,13 @@ export default {
       new webpack.ProvidePlugin({
         // global modules
         flowbite: 'flowbite'
-      }),
+      })
     ],
     postcss: {
       plugins: {
         tailwindcss: {},
-        autoprefixer: {},
-      },
-    },
+        autoprefixer: {}
+      }
+    }
   }
 }

@@ -46,10 +46,11 @@
                 <v-card-text>
                   <v-container>
                     <v-row>
-                      <FieldText v-for="field in edit.fields"
+                      <FieldText
+                        v-for="field in edit.fields"
                         :key="field.label"
-                        :label="field.label"
-                        v-model="edit.item[field.val]" />
+                        v-model="edit.item[field.val]"
+                        :label="field.label" />
                     </v-row>
                   </v-container>
                 </v-card-text>
@@ -68,13 +69,12 @@
                 </v-card-title>
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <BtnCancel @click-event="closeDelete"/>
+                  <BtnCancel @click-event="closeDelete" />
                   <BtnConfirm @click-event="deleteItemConfirm">OK</BtnConfirm>
                   <v-spacer></v-spacer>
                 </v-card-actions>
               </v-card>
             </v-dialog>
-
           </v-toolbar>
         </template>
 
@@ -130,6 +130,10 @@ export default {
     }
   },
 
+  async fetch () {
+    this.tbl_data = await this.$axios.$get(this.url)
+  },
+
   computed: {
     formTitle () {
       return (this.edit.index === -1 ? 'New' : 'Edit') + ' ' + this.model.singular
@@ -148,16 +152,12 @@ export default {
     }
   },
 
-  async fetch () {
-    this.tbl_data = await this.$axios.$get(this.url)
-  },
-
   methods: {
     // Axios API Methods
     $updateItem (item, index) {
       const itemCP = Object.assign({}, item)
       this.tbl.exclude?.onUpdate?.forEach(el => delete itemCP[el])
-      this.$axios.$put(this.url + '/' + item.id, itemCP)
+      this.$axios.$put(this.url + '/' + item.id + '?id=true', itemCP)
         .then(resp => Object.assign(this.tbl_data[index], resp))
         .catch(err => console.log(err))
     },
@@ -168,7 +168,7 @@ export default {
         .catch(err => console.log(err))
     },
     $deleteItem (item) {
-      this.$axios.$delete(this.url + '/' + item.id)
+      this.$axios.$delete(this.url + '/' + item.id + '?id=true')
         .then(this.tbl_data.splice(this.edit.index, 1))
         .catch(err => console.log(err))
     },

@@ -1,9 +1,9 @@
 <template>
-  <div class="relative flex flex-wrap xl:flex-nowrap flex-col sm:flex-row items-top min-h-screen bg-gray-100 sm:mt-6">
-    <div class="flex-auto mx-auto w-full sm:max-w-3xl sm:px-6 lg:px-8 xl:flex-none xl:mx-0">
+  <div class="relative flex flex-wrap xl:flex-nowrap flex-col sm:flex-row items-top min-h-screen bg-gray-100"> <!--sm:mt-6-->
+    <div class="flex-auto mx-auto w-full sm:max-w-3xl sm:px-6 sm:mt-3 lg:px-8 xl:flex-none xl:mx-0 xl:mt-6">
       <div v-for="(t_data, lane_number) in race_data" :key="lane_number" class="flex items-center">
-        <div :class="color('text', t_data.lane.color, '800')" class="mr-8 hidden sm:block text-5xl">{{ lane_number }}</div>
-        <div :class="color('bg', t_data.lane.color, '500')" class="flex-shrink w-full overflow-hidden shadow sm:rounded-lg sm:p-4 sm:my-2 p-3">
+        <div :class="[color('text', t_data.lane.color, '800'), { 'opacity-50': !t_data.run }]" class="mr-8 hidden sm:block text-5xl">{{ lane_number }}</div>
+        <div :class="[color('bg', t_data.lane.color, '500'), { 'opacity-50': !t_data.run }]" class="flex-shrink w-full overflow-hidden shadow sm:rounded-lg sm:p-4 sm:my-2 p-3">
           <div class="p-3 sm:p-6 bg-white text-center rounded-lg">
             <h2 class="sm:hidden pt-2 pb-3 text-xl font-medium tracking-wider text-gray-700 uppercase">
               Lane #{{ lane_number }}
@@ -39,7 +39,7 @@
                       {{ i + 1 }}
                     </td>
                     <td class="py-4 px-4 text-2xl sm:text-4xl font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                      {{ car.car_number }} - {{ car.name}}
+                      {{ car.car_number }} - {{ car.name }}
                     </td>
                     <td class="py-4 px-4 text-2xl sm:text-4xl font-medium text-gray-900 whitespace-nowrap dark:text-white">
                       <div v-if="car.top_run">{{ car.top_run.mph ? car.top_run.mph.toFixed(3) : 0 }} mph</div>
@@ -65,6 +65,7 @@ export default {
     race: null,
     track: null,
     ws: null,
+    socket: null,
     cars: []
   }),
   async fetch () {
@@ -80,7 +81,7 @@ export default {
     console.log(this.cars)
   },
   mounted () {
-    this.connect()
+    this.connect(this.$route.params.watch)
   },
   methods: {
     color (type, color, op) {
@@ -90,6 +91,19 @@ export default {
         op = type === 'bg' ? '700' : op
       }
       return [type, color, op].join('-')
+    },
+    setHeat (heat) {
+      const heatRuns = Object.fromEntries(Object.entries(heat.runs).map(([, run]) => [run.lane.lane_number, run]))
+      Object.keys(this.race_data).forEach((lane) => {
+        this.race_data[lane].run = heatRuns[lane] ? heatRuns[lane] : null
+      })
+    },
+    getSpeeds () {
+      this.$axios.$get('/races/' + this.race.id + '/speeds')
+        .then((resp) => {
+          this.cars = resp
+          this.sortSpeeds()
+        })
     },
     sortSpeeds () {
       this.cars.sort((a, b) => {
@@ -109,9 +123,34 @@ export default {
     field (obj, path) {
       return path.split('.').reduce((o, p) => o ? o[p] : '', obj)
     },
-    connect () {
-      this.ws = new WebSocket('ws://api.racetrack.gratiafides.com/watch/' + this.$route.params.watch)
+    connect (raceLink) {
+      this.socket = this.$nuxtSocket({ path: '/live/socket.io' })
+      /* Listen for events: */
+      this.socket.on('connect', () => {
+        console.log('Socket connected...')
+        this.socket.emit('watch', { race: raceLink })
+      })
+      this.socket.on('disconnect', () => {
+        console.log('Socket disconnected...')
+        this.socket.open()
+      })
+      this.socket.on('start_heat', (msg) => {
+        console.log('Starting Heat', msg)
+        this.active_heat = true
+        this.setHeat(msg.data)
+        /* msg.data.runs.forEach((run) => {
+          this.race_data[run.lane.lane_number].run = run
+        }) */
+      })
+      this.socket.on('heat_results', (msg) => {
+        console.log('Heat Results', msg)
+        this.active_heat = false
+        this.getSpeeds()
+        this.setHeat(msg.data)
+      })
+      /* this.ws = new WebSocket('ws://api.racetrack.gratiafides.com/watch/' + this.$route.params.watch)
       console.log(this.ws)
+
       this.ws.onmessage = (e) => {
         const event = JSON.parse(e.data)
         console.log(event)
@@ -129,6 +168,7 @@ export default {
           this.race_data[run.lane.lane_number].run = run
         })
       }
+
       this.ws.onopen = (event) => {
         console.log(event)
         console.log('Websocket connected...')
@@ -137,7 +177,7 @@ export default {
         console.log(event)
         console.log('Websocket disconnected...')
         this.ws = null
-      }
+      } */
     }
   }
 }

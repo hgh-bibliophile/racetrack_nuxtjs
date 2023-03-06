@@ -13,6 +13,8 @@ services:
     domains: # custom domains
       - 'racetrack.gratiafides.com'
     envVars:
-      - key: HOST # Imported from Heroku app
+      - key: HOST # Imported from Heroku app -- needed?
         value: 0.0.0.0
+      - key: API_URL
+        value: 'https://api.racetrack.gratiafides.com/'
 
