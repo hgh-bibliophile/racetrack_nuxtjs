@@ -44,13 +44,14 @@ export default {
     // https://go.nuxtjs.dev/tailwindcss,
     // '@nuxtjs/tailwindcss',
     //'@nuxt/postcss8',
-    '@nuxtjs/vuetify'
+    
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     '@nuxtjs/axios',
-    'nuxt-socket-io'
+    'nuxt-socket-io',
+    '@nuxtjs/vuetify'
   ],
 
   io: {
