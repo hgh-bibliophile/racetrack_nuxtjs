@@ -16,7 +16,7 @@ services:
       - key: HOST # Imported from Heroku app -- needed?
         value: 0.0.0.0
       - key: NODE_VERSION
-        value: 16.9.1
+        value: 18.15.0
       - key: API_URL
         value: 'https://api.racetrack.gratiafides.com/'
 
