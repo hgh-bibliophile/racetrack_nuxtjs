@@ -40,10 +40,10 @@ export default {
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
     // https://go.nuxtjs.dev/eslint
-    '@nuxtjs/eslint-module',
+    //'@nuxtjs/eslint-module',
     // https://go.nuxtjs.dev/tailwindcss,
     // '@nuxtjs/tailwindcss',
-    '@nuxt/postcss8',
+    //'@nuxt/postcss8',
     '@nuxtjs/vuetify'
   ],
 
@@ -77,9 +77,11 @@ export default {
       })
     ],
     postcss: {
-      plugins: {
-        tailwindcss: {},
-        autoprefixer: {}
+      postcssOptions: {
+        plugins: {
+          tailwindcss: {},
+          autoprefixer: {}
+        }
       }
     }
   }
