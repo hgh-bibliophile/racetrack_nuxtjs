@@ -31,7 +31,8 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
-    { src: '~/plugins/vue-flowbite.js', ssr: false }
+    { src: '~/plugins/vue-flowbite.js', ssr: false },
+    '@/plugins/vuetify'
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -44,14 +45,13 @@ export default {
     // https://go.nuxtjs.dev/tailwindcss,
     // '@nuxtjs/tailwindcss',
     //'@nuxt/postcss8',
-    
+    '@nuxtjs/vuetify'
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     '@nuxtjs/axios',
-    'nuxt-socket-io',
-    '@nuxtjs/vuetify'
+    'nuxt-socket-io'
   ],
 
   io: {
