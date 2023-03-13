@@ -7,7 +7,7 @@ services:
     env: node # valid values: https://render.com/docs/yaml-spec#environment
     # dockerfilePath: Dockerfile.render
     plan: free # optional; defaults to starter
-    buildCommand: npm run build
+    buildCommand: npm install; npm run build
     startCommand: npm start
     numInstances: 1
     domains: # custom domains
